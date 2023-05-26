@@ -5,12 +5,13 @@
     <title>게시글 수정</title>
 </head>
 <body>
-<div class="layout">
-    <form th:action="@{/board/update/{id}(id=${board.id})}" method="post">
-        <input name="title" type="text" placeholder="제목" th:value="${board.title}">
-        <textarea name="content" placeholder="내용" th:text="${board.content}"></textarea>
-        <button type="submit">수정</button>
-    </form>
-</div>
+    <div class="layout">
+        <form th:action="@{/board/update/{id}(id=${board.id})}" method="post">
+            <input name="title" type="text" placeholder="제목" th:value="${board.title}">
+            <textarea name="content" placeholder="내용" th:text="${board.content}"></textarea>
+            <input type="file" name="file">
+            <button type="submit">수정</button>
+        </form>
+    </div>
 </body>
 </html>
