@@ -1,18 +1,22 @@
 package com.finalproject.board.controller;
 
+
+
 import com.finalproject.board.entity.Board;
 import com.finalproject.board.service.BoardService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -21,6 +25,20 @@ public class BoardController {
 
     @Autowired
     private BoardService boardService;
+
+    // 게시판 홈페이지
+    @GetMapping("/") //localhost:8080/
+    public String home(Model model){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        // 사용자 이름을 모델에 추가하여 프로필 페이지에 전달
+        model.addAttribute("username", username);
+
+        return "board/home";
+    }
+
 
     // 게시글 목록
     @GetMapping("/board/list") //localhost:8080/board/list
@@ -48,14 +66,14 @@ public class BoardController {
         model.addAttribute("endPage", endPage);
 
 
-        return "boardList";
+        return "board/boardList";
     }
 
     // 게시글 작성 페이지
     @GetMapping("/board/write") //localhost:8080/board/write
     public String boardWriteForm(){
 
-        return "boardWrite";
+        return "board/boardWrite";
     }
 
     // 게시글 작성 처리
@@ -67,7 +85,7 @@ public class BoardController {
         model.addAttribute("message", "게시글이 등록되었습니다.");
         model.addAttribute("nextPageUrl", "/board/list");
 
-        return "message";
+        return "board/message";
     }
 
     // 게시글 상세보기
@@ -75,7 +93,7 @@ public class BoardController {
     public String boardView(Model model, Integer id){
 
         model.addAttribute("board", boardService.boardView(id));
-        return "boardView";
+        return "board/boardView";
     }
 
     // 게시글 삭제
@@ -92,7 +110,7 @@ public class BoardController {
 
         model.addAttribute("board", boardService.boardView(id));
 
-        return "boardModify";
+        return "board/boardModify";
     }
 
     // 게시글 수정 처리
