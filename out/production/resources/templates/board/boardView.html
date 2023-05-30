@@ -1,14 +1,61 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>게시글 상세 페이지</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<h1 th:text="${board.title}">제목입니다.</h1>
-<p th:text="${board.content}">내용이 들어갈 부분입니다.</p>
-<a th:href="@{${board.filepath}}">첨부파일 새 창에서 보기</a>
-<a th:href="@{/board/delete(id=${board.id})}">글삭제</a>
-<a th:href="@{/board/modify/{id}(id=${board.id})}">글수정</a>
+<div class="container">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="/" class="nav-link px-2 text-secondary">Home</a></li>
+                    <li><a href="/board/list" class="nav-link px-2 text-secondary">Board</a></li>
+                </ul>
+
+                <div class="col-md-3 text-end">
+                    <a type="submit" th:href="@{/account/login}" class="btn btn-outline-primary me-2"
+                       sec:authorize="!isAuthenticated()">Login</a>
+                    <button type="button" onclick="location.href='/account/register' " class="btn btn-primary"
+                            sec:authorize="!isAuthenticated()">Sign-up</button>
+
+                    <form class="form-check-inline" th:action="@{/logout}" method="POST" sec:authorize="isAuthenticated()">
+                        <span sec:authentication="name">사용자</span>
+                        <span class="mx-2" sec:authentication="principal.authorities">권한</span>
+                        <button type="submit" class="btn btn-primary">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+</div>
+
+<main class="mt-5 pt-5">
+    <div class="container-fluid px-4">
+        <h1 class="mt-4" th:text="${board.title}">제목</h1>
+        <div class="card mb-4">
+            <div class="card-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="content" class="form-label"></label>
+                        <p th:text="${board.content}" class="form-control" id="content" th:name="content">내용</p>
+                    </div>
+                    <div>
+                        <a th:if="${board.filepath != null}" th:href="@{${board.filepath}}" target="_blank"
+                           class="btn btn-outline-primary">첨부파일 새 창에서 보기</a>
+                    </div>
+                    <a href="/board/list" class="btn btn-outline-secondary">목록으로</a>
+                    <a th:href="@{/board/modify/{id}(id=${board.id})}" class="btn btn-outline-warning">수정하기</a>
+                    <a th:href="@{/board/delete(id=${board.id})}" class="btn btn-outline-danger"
+                       onclick="return confirm('삭제하시겠습니까?')">삭제하기</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
 </body>
 </html>

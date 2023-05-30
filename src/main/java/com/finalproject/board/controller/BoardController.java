@@ -57,13 +57,17 @@ public class BoardController {
         }
 
         int nowPage = list.getPageable().getPageNumber() + 1; // 0부터 시작하므로 1 추가
+        int totalPage = list.getTotalPages() - 1; // 전체 페이지 수
+
         int startPage = Math.max(nowPage - 4, 1); // 음수 방지
-        int endPage = Math.min(nowPage + 5, list.getTotalPages()); // 최대 페이지 초과 방지
+        int endPage = Math.min(nowPage + 5, totalPage); // 최대 페이지 초과 방지
+
 
         model.addAttribute("list", list);
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
+        model.addAttribute("totalPage", totalPage);
 
 
         return "board/boardList";
@@ -77,13 +81,16 @@ public class BoardController {
     }
 
     // 게시글 작성 처리
-    @PostMapping("board/writePro") //localhost:8080/board/writePro
-    public String boardWritePro(Board board, Model model, MultipartFile file) throws Exception{
+
+    @PostMapping("/board/writePro") //localhost:8080/board/writePro
+    public String boardWrite(Board board, MultipartFile file, Model model) throws Exception{
+
 
         boardService.boardWrite(board, file);
 
-        model.addAttribute("message", "게시글이 등록되었습니다.");
-        model.addAttribute("nextPageUrl", "/board/list");
+
+        model.addAttribute("message", "글 작성이 완료되었습니다.");
+        model.addAttribute("nextUrl", "/board/list");
 
         return "board/message";
     }
@@ -98,10 +105,14 @@ public class BoardController {
 
     // 게시글 삭제
     @GetMapping("/board/delete") //localhost:8080/board/delete
-    public String boardDelete(Integer id){
+    public String boardDelete(Integer id, Model model){
 
         boardService.boardDelete(id);
-        return "redirect:/board/list";
+
+        model.addAttribute("message", "글 삭제가 완료되었습니다.");
+        model.addAttribute("nextUrl", "/board/list");
+
+        return "/board/message";
     }
 
     // 게시글 수정 페이지
@@ -115,14 +126,19 @@ public class BoardController {
 
     // 게시글 수정 처리
     @PostMapping("/board/update/{id}") //localhost:8080/board/update
-    public String boardUpdate(@PathVariable("id") Integer id, Board boardModified, MultipartFile file) throws Exception{
+    public String boardUpdate(@PathVariable("id") Integer id, Board boardModified, MultipartFile file, Model model) throws Exception{
 
         Board boardTemp = boardService.boardView(id);
         boardTemp.setTitle(boardModified.getTitle());
         boardTemp.setContent(boardModified.getContent());
+        boardTemp.setFilepath(boardModified.getFilepath());
+        boardTemp.setFilename(boardModified.getFilename());
 
         boardService.boardWrite(boardTemp, file);
 
-        return "redirect:/board/list";
+        model.addAttribute("message", "글 수정이 완료되었습니다.");
+        model.addAttribute("nextUrl", "/board/list");
+
+        return "/board/message";
     }
 }

@@ -1,17 +1,80 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+
     <title>게시글 작성</title>
+
+
+    <style>
+        body {
+            padding-top: 70px;
+            padding-bottom: 30px;
+        }
+    </style>
 </head>
+
 <body>
-    <div class="layout">
-        <form action="/board/writePro" method="post" enctype="multipart/form-data">
-            <input name="title" type="text" placeholder="제목">
-            <textarea name="content" placeholder="내용"></textarea>
-            <input type="file" name="file">
-            <button type="submit">작성</button>
-        </form>
+    <div class="container">
+        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+            <div class="container">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+
+                    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                        <li><a href="/" class="nav-link px-2 text-secondary">Home</a></li>
+                        <li><a href="/board/list" class="nav-link px-2 text-secondary">Board</a></li>
+                    </ul>
+
+                    <div class="col-md-3 text-end">
+                        <a type="submit" th:href="@{/account/login}" class="btn btn-outline-primary me-2"
+                           sec:authorize="!isAuthenticated()">Login</a>
+                        <button type="button" onclick="location.href='/account/register' " class="btn btn-primary"
+                                sec:authorize="!isAuthenticated()">Sign-up</button>
+
+                        <form class="form-check-inline" th:action="@{/logout}" method="POST" sec:authorize="isAuthenticated()">
+                            <span sec:authentication="name">사용자</span>
+                            <span class="mx-2" sec:authentication="principal.authorities">권한</span>
+                            <button type="submit" class="btn btn-primary">Logout</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </header>
     </div>
+
+    <article>
+        <div class="container" role="main">
+            <h2>게시글 작성</h2>
+
+            <form name="form" id="form" role="form" method="post" action="/board/writePro" enctype="multipart/form-data">
+
+                <div class="mb-3">
+                    <label for="title">제목</label>
+                    <input type="text" class="form-control" name="title" id="title" placeholder="제목을 입력해 주세요">
+                </div>
+
+                <div class="mb-3">
+                    <label for="content">내용</label>
+                    <textarea class="form-control" rows="5" name="content" id="content" placeholder="내용을 입력해 주세요" ></textarea>
+                </div>
+                <div>
+                    <input type="file" name="file">
+                </div>
+                <div >
+                    <button type="submit" class="btn btn-sm btn-primary">저장</button>
+                    <a type="button" href="/board/list" class="btn btn-sm btn-primary">목록</a>
+                </div>
+            </form>
+
+
+        </div>
+
+    </article>
 </body>
 </html>
