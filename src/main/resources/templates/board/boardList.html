@@ -72,7 +72,7 @@
                     <span class="page-link" th:if="${page == nowPage}" th:text="${page}" style="color: red;"></span>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" th:href="@{/board/list(page=${totalPage}, searchKeyword=${param.searchKeyword})}" aria-label="Next">
+                    <a class="page-link" th:href="@{/board/list(page=${totalPage - 1}, searchKeyword=${param.searchKeyword})}" aria-label="Next">
                         >></a>
                 </li>
             </ul>

@@ -42,7 +42,7 @@
                 <form>
                     <div class="mb-3">
                         <label for="content" class="form-label"></label>
-                        <p th:text="${board.content}" class="form-control" id="content" th:name="content">내용</p>
+                        <textarea rows="10" th:text="${board.content}" class="form-control" id="content" th:name="content">내용</textarea>
                     </div>
                     <div>
                         <a th:if="${board.filepath != null}" th:href="@{${board.filepath}}" target="_blank"

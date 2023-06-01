@@ -57,10 +57,10 @@ public class BoardController {
         }
 
         int nowPage = list.getPageable().getPageNumber() + 1; // 0부터 시작하므로 1 추가
-        int totalPage = list.getTotalPages() - 1; // 전체 페이지 수
+        int totalPage = list.getTotalPages(); // 전체 페이지 수
 
         int startPage = Math.max(nowPage - 4, 1); // 음수 방지
-        int endPage = Math.min(nowPage + 5, totalPage); // 최대 페이지 초과 방지
+        int endPage = Math.min(nowPage + 4, totalPage); // 최대 페이지 초과 방지
 
 
         model.addAttribute("list", list);
